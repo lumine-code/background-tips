@@ -16,6 +16,11 @@
   },
   "license": "MIT",
   "main": "./lib/background-tips",
+  "files": [
+    "lib",
+    "spec",
+    "styles"
+  ],
   "engines": {
     "lumine": "^1.0.0"
   },
