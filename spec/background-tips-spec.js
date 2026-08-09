@@ -168,9 +168,8 @@ describe("BackgroundTips", () => {
 
     it("drops a tip that does not parse", () => {
       spyOn(console, "warn");
-      const before = backgroundTipsView.tips.length;
-      addTip("{% nosuchtag %}");
-      expect(backgroundTipsView.tips.length).toBe(before);
+      const tip = addTip("{% nosuchtag %}");
+      expect(backgroundTipsView.renderTip(tip)).toBeNull();
       expect(console.warn).toHaveBeenCalled();
     });
   });
