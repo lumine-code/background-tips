@@ -5,23 +5,23 @@ describe("BackgroundTips", () => {
   let workspaceElement;
 
   const activatePackage = async () => {
-    const { mainModule } = await atom.packages.activatePackage("background-tips");
+    const { mainModule } = await lumine.packages.activatePackage("background-tips");
     return mainModule.backgroundTipsView;
   };
 
   beforeEach(() => {
-    workspaceElement = atom.views.getView(atom.workspace);
+    workspaceElement = lumine.views.getView(lumine.workspace);
     jasmine.attachToDOM(workspaceElement);
   });
 
   describe("when the package is activated when there is only one pane", () => {
     beforeEach(() => {
-      expect(atom.workspace.getCenter().getPanes().length).toBe(1);
+      expect(lumine.workspace.getCenter().getPanes().length).toBe(1);
     });
 
     describe("when the pane is empty", () => {
       it("attaches the view after a delay", async () => {
-        expect(atom.workspace.getActivePane().getItems().length).toBe(0);
+        expect(lumine.workspace.getActivePane().getItems().length).toBe(0);
 
         const backgroundTipsView = await activatePackage();
         expect(backgroundTipsView.element.parentNode).toBeFalsy();
@@ -32,7 +32,7 @@ describe("BackgroundTips", () => {
 
     describe("when the pane is not empty", () => {
       it("does not attach the view", async () => {
-        await atom.workspace.open();
+        await lumine.workspace.open();
 
         const backgroundTipsView = await activatePackage();
         advanceClock(backgroundTipsView.startDelay + 1);
@@ -46,7 +46,7 @@ describe("BackgroundTips", () => {
         advanceClock(backgroundTipsView.startDelay + 1);
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
-        atom.workspace.getActivePane().splitRight();
+        lumine.workspace.getActivePane().splitRight();
         expect(backgroundTipsView.element.parentNode).toBeFalsy();
       });
     });
@@ -54,8 +54,8 @@ describe("BackgroundTips", () => {
 
   describe("when the package is activated when there are multiple panes", () => {
     beforeEach(() => {
-      atom.workspace.getActivePane().splitRight();
-      expect(atom.workspace.getCenter().getPanes().length).toBe(2);
+      lumine.workspace.getActivePane().splitRight();
+      expect(lumine.workspace.getCenter().getPanes().length).toBe(2);
     });
 
     it("does not attach the view", async () => {
@@ -67,14 +67,14 @@ describe("BackgroundTips", () => {
     describe("when all but the last pane is destroyed", () => {
       it("attaches the view", async () => {
         const backgroundTipsView = await activatePackage();
-        atom.workspace.getActivePane().destroy();
+        lumine.workspace.getActivePane().destroy();
         advanceClock(backgroundTipsView.startDelay + 1);
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
-        atom.workspace.getActivePane().splitRight();
+        lumine.workspace.getActivePane().splitRight();
         expect(backgroundTipsView.element.parentNode).toBeFalsy();
 
-        atom.workspace.getActivePane().destroy();
+        lumine.workspace.getActivePane().destroy();
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
       });
     });
@@ -84,7 +84,7 @@ describe("BackgroundTips", () => {
     let backgroundTipsView;
 
     beforeEach(async () => {
-      expect(atom.workspace.getCenter().getPanes().length).toBe(1);
+      expect(lumine.workspace.getCenter().getPanes().length).toBe(1);
 
       backgroundTipsView = await activatePackage();
       advanceClock(backgroundTipsView.startDelay);
@@ -122,8 +122,8 @@ describe("BackgroundTips", () => {
 
     beforeEach(async () => {
       backgroundTipsView = await activatePackage();
-      keymapDisposable = atom.keymaps.add("spec-tips", {
-        "atom-workspace": { "ctrl-alt-y": "spec-tips:bound" },
+      keymapDisposable = lumine.keymaps.add("spec-tips", {
+        "lumine-workspace": { "ctrl-alt-y": "spec-tips:bound" },
       });
     });
 
@@ -140,7 +140,7 @@ describe("BackgroundTips", () => {
     });
 
     it("resolves a keystroke through the selector the filter is given", () => {
-      expect(render("Do it with {{ 'spec-tips:bound' | keystroke: 'atom-workspace' }}")).toBe(
+      expect(render("Do it with {{ 'spec-tips:bound' | keystroke: 'lumine-workspace' }}")).toBe(
         `Do it with ${boundKeystroke()}`,
       );
       expect(render("Do it with {{ 'spec-tips:bound' | keystroke: '.no-such-scope' }}")).toBeNull();
