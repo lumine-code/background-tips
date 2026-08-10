@@ -1,5 +1,4 @@
 const { humanizeKeystroke } = require("@lumine-code/underscore-plus");
-const { it, beforeEach } = require("./async-spec-helpers");
 
 describe("BackgroundTips", () => {
   let workspaceElement;
