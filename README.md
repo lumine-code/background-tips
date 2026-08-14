@@ -11,7 +11,7 @@ Displays tips about Lumine in the background when no editors are open.
 
 ## Installation
 
-To install `background-tips` search for _background-tips_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/background-tips`.
+To install `background-tips` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/background-tips`.
 
 ## Usage
 
