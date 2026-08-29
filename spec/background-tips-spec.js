@@ -15,7 +15,7 @@ describe("BackgroundTips", () => {
 
   describe("when the package is activated when there is only one pane", () => {
     beforeEach(() => {
-      expect(lumine.workspace.getCenter().getPanes().length).toBe(1);
+      expect(lumine.workspace.getCenter().getTiledPanes().length).toBe(1);
     });
 
     describe("when the pane is empty", () => {
@@ -26,6 +26,17 @@ describe("BackgroundTips", () => {
         expect(backgroundTipsView.element.parentNode).toBeFalsy();
         advanceClock(backgroundTipsView.startDelay + 1);
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
+      });
+
+      it("uses the empty tiled pane even when another center pane is detached", async () => {
+        const center = lumine.workspace.getCenter();
+        const tiledPane = center.getTiledPanes()[0];
+        spyOn(center, "getPanes").and.returnValue([tiledPane, { isDetached: () => true }]);
+
+        const backgroundTipsView = await activatePackage();
+        advanceClock(backgroundTipsView.startDelay + 1);
+
+        expect(backgroundTipsView.element.parentNode).toBe(tiledPane.getElement());
       });
     });
 
@@ -54,7 +65,7 @@ describe("BackgroundTips", () => {
   describe("when the package is activated when there are multiple panes", () => {
     beforeEach(() => {
       lumine.workspace.getActivePane().splitRight();
-      expect(lumine.workspace.getCenter().getPanes().length).toBe(2);
+      expect(lumine.workspace.getCenter().getTiledPanes().length).toBe(2);
     });
 
     it("does not attach the view", async () => {
@@ -83,7 +94,7 @@ describe("BackgroundTips", () => {
     let backgroundTipsView;
 
     beforeEach(async () => {
-      expect(lumine.workspace.getCenter().getPanes().length).toBe(1);
+      expect(lumine.workspace.getCenter().getTiledPanes().length).toBe(1);
 
       backgroundTipsView = await activatePackage();
       advanceClock(backgroundTipsView.startDelay);
