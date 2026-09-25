@@ -103,14 +103,95 @@ describe("BackgroundTips", () => {
     });
   });
 
+  describe("provider service", () => {
+    let providerDisposables;
+
+    const provide = (packageName, tips) => {
+      const disposable = lumine.packages.serviceHub.provide("background-tips.provider", "1.0.0", {
+        packageName,
+        tips,
+      });
+      providerDisposables.push(disposable);
+      return disposable;
+    };
+
+    const tipsFrom = (view, packageName) =>
+      view.tips.filter((tip) => tip.packageName === packageName);
+
+    beforeEach(() => {
+      providerDisposables = [];
+    });
+
+    afterEach(() => {
+      for (const disposable of providerDisposables) disposable.dispose();
+    });
+
+    it("collects a provider published before the package is activated", async () => {
+      provide("early-tips", ["Published first."]);
+
+      const backgroundTipsView = await activatePackage();
+
+      expect(tipsFrom(backgroundTipsView, "early-tips").map((tip) => tip.source)).toEqual([
+        "Published first.",
+      ]);
+    });
+
+    it("collects a provider published after the package is activated", async () => {
+      const backgroundTipsView = await activatePackage();
+
+      provide("late-tips", ["Published later."]);
+
+      expect(tipsFrom(backgroundTipsView, "late-tips").map((tip) => tip.source)).toEqual([
+        "Published later.",
+      ]);
+    });
+
+    it("removes exactly that provider's tips when the service is disposed", async () => {
+      const backgroundTipsView = await activatePackage();
+      const first = provide("first-tips", ["First."]);
+      provide("second-tips", ["Second."]);
+
+      first.dispose();
+
+      expect(tipsFrom(backgroundTipsView, "first-tips")).toEqual([]);
+      expect(tipsFrom(backgroundTipsView, "second-tips").map((tip) => tip.source)).toEqual([
+        "Second.",
+      ]);
+    });
+
+    it("does not accumulate tips when a provider is published again", async () => {
+      const backgroundTipsView = await activatePackage();
+      const first = provide("returning-tips", ["Only once."]);
+      first.dispose();
+
+      provide("returning-tips", ["Only once."]);
+
+      expect(tipsFrom(backgroundTipsView, "returning-tips")).toHaveLength(1);
+    });
+
+    it("warns and ignores an invalid provider contribution", async () => {
+      const backgroundTipsView = await activatePackage();
+      spyOn(console, "warn");
+
+      provide("broken-tips", [""]);
+
+      expect(tipsFrom(backgroundTipsView, "broken-tips")).toEqual([]);
+      expect(console.warn).toHaveBeenCalledWith(
+        "background-tips: ignored an invalid provider contribution",
+      );
+    });
+  });
+
   describe("tip templates", () => {
-    let backgroundTipsView, keymapDisposable;
+    let backgroundTipsView, keymapDisposable, tipDisposables;
 
     const addTip = (source) => {
-      backgroundTipsView.addPackageTips({
-        name: "spec-tips",
-        metadata: { backgroundTips: [source] },
-      });
+      tipDisposables.push(
+        backgroundTipsView.addTips({
+          packageName: "spec-tips",
+          tips: [source],
+        }),
+      );
       return backgroundTipsView.tips[backgroundTipsView.tips.length - 1];
     };
 
@@ -121,12 +202,16 @@ describe("BackgroundTips", () => {
 
     beforeEach(async () => {
       backgroundTipsView = await activatePackage();
+      tipDisposables = [];
       keymapDisposable = lumine.keymaps.add("spec-tips", {
         "lumine-workspace": { "ctrl-alt-y": "spec-tips:bound" },
       });
     });
 
-    afterEach(() => keymapDisposable.dispose());
+    afterEach(() => {
+      keymapDisposable.dispose();
+      for (const disposable of tipDisposables) disposable.dispose();
+    });
 
     it("shows a tip with no template tags as it is", () => {
       expect(render("A plain tip.")).toBe("A plain tip.");
