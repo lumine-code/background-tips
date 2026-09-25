@@ -182,6 +182,49 @@ describe("BackgroundTips", () => {
     });
   });
 
+  describe("ignored packages", () => {
+    let backgroundTipsView, providerDisposable;
+
+    beforeEach(async () => {
+      backgroundTipsView = await activatePackage();
+      providerDisposable = lumine.packages.serviceHub.provide("background-tips.provider", "1.0.0", {
+        packageName: "ignored-tips",
+        tips: ["Never show this tip."],
+      });
+    });
+
+    afterEach(() => {
+      providerDisposable.dispose();
+      lumine.config.unset("background-tips.ignoredPackages");
+    });
+
+    it("declares an empty list by default", () => {
+      const setting = require("../package.json").configSchema.ignoredPackages;
+      expect(setting.type).toBe("array");
+      expect(setting.items).toEqual({ type: "string" });
+      expect(setting.default).toEqual([]);
+    });
+
+    it("updates the rotation when package names are ignored or restored", () => {
+      advanceClock(backgroundTipsView.startDelay);
+      advanceClock(backgroundTipsView.fadeDuration);
+      const hiddenTip = backgroundTipsView.tips.find((tip) => tip.packageName === "ignored-tips");
+      const hiddenIndex = backgroundTipsView.tips.indexOf(hiddenTip);
+
+      lumine.config.set("background-tips.ignoredPackages", ["ignored-tips"]);
+      spyOn(backgroundTipsView, "renderTip").and.callThrough();
+      backgroundTipsView.index = hiddenIndex - 1;
+      backgroundTipsView.showNextTip();
+      expect(backgroundTipsView.renderTip).not.toHaveBeenCalledWith(hiddenTip);
+
+      backgroundTipsView.renderTip.calls.reset();
+      lumine.config.set("background-tips.ignoredPackages", []);
+      backgroundTipsView.index = hiddenIndex - 1;
+      backgroundTipsView.showNextTip();
+      expect(backgroundTipsView.renderTip).toHaveBeenCalledWith(hiddenTip);
+    });
+  });
+
   describe("tip templates", () => {
     let backgroundTipsView, keymapDisposable, tipDisposables;
 

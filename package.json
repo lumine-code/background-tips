@@ -30,6 +30,17 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "configSchema": {
+    "ignoredPackages": {
+      "title": "Ignored Packages",
+      "description": "Package names whose background tips are not shown.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
   "consumedServices": {
     "background-tips.provider": {
       "versions": {

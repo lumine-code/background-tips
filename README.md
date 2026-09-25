@@ -8,6 +8,7 @@ Displays tips about Lumine in the background when no editors are open.
 - **Liquid templates**: every tip is a Liquid template, so it can branch on what the keymap actually binds.
 - **Live keystrokes**: a keystroke is resolved when the tip is shown, so it follows the platform and any keymap the user has changed.
 - **Package contributions**: collects tips from every active `background-tips.provider` service.
+- **Ignored packages**: lets you suppress tips from selected package names.
 
 ## Installation
 
@@ -16,6 +17,8 @@ To install `background-tips` search for it in the Install pane of the Lumine set
 ## Usage
 
 Packages contribute tips by providing `background-tips.provider@1.0.0`. The service value names its package and carries an array of [Liquid](https://liquidjs.com) templates, rendered every time a tip comes up. A string with no template tags in it is shown as-is.
+
+Add package names to `background-tips.ignoredPackages` to keep their tips out of the rotation without disabling those packages.
 
 ```json
 "providedServices": {
