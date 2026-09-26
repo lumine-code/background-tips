@@ -35,3 +35,11 @@ background-tips {
     }
   }
 }
+
+/* Move the workspace tip with the logo's shared composition anchor. Other
+   background-tip elements live inside pane items and do not match this scope. */
+lumine-pane.empty-pane-logo-visible:not(lumine-dock lumine-pane) > background-tips {
+  .background-message.centered {
+    transform: translateY(var(--empty-pane-content-offset));
+  }
+}

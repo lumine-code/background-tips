@@ -124,6 +124,15 @@ describe("BackgroundTips", () => {
       expect(backgroundTipsView.message.textContent).toBeTruthy();
     });
 
+    it("moves the workspace message below the pane midpoint with the logo", () => {
+      const messageList = backgroundTipsView.element.querySelector(".background-message");
+      const transform = new DOMMatrixReadOnly(getComputedStyle(messageList).transform);
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const expectedOffset = Math.min(rem * 8, backgroundTipsView.element.offsetHeight * 0.18);
+
+      expect(transform.m42).toBeCloseTo(expectedOffset, 1);
+    });
+
     it("changes text in the message", async () => {
       const oldText = backgroundTipsView.message.textContent;
       advanceClock(backgroundTipsView.displayDuration);
