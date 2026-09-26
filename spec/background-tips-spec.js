@@ -124,18 +124,6 @@ describe("BackgroundTips", () => {
       expect(backgroundTipsView.message.textContent).toBeTruthy();
     });
 
-    it("places the message below the centred empty-pane logo", () => {
-      const pane = lumine.workspace.getCenter().getActivePane().getElement();
-      const itemViews = pane.querySelector(":scope > .item-views");
-      const logo = getComputedStyle(itemViews, "::after");
-      const logoBottom =
-        itemViews.getBoundingClientRect().top +
-        itemViews.offsetHeight / 2 +
-        parseFloat(logo.height) / 2;
-
-      expect(backgroundTipsView.message.getBoundingClientRect().top).toBeGreaterThan(logoBottom);
-    });
-
     it("changes text in the message", async () => {
       const oldText = backgroundTipsView.message.textContent;
       advanceClock(backgroundTipsView.displayDuration);

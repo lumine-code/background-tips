@@ -35,16 +35,3 @@ background-tips {
     }
   }
 }
-
-/* The editor keeps its empty-pane mark centred. When that mark is enabled,
-   place the workspace tip below its responsive 20rem / 40%-high box. */
-lumine-pane.empty-pane-logo-visible:not(lumine-dock lumine-pane) > background-tips {
-  .background-message.centered {
-    transform: translateY(
-      calc(
-        min(10rem, 20%) + var(--component-padding) + var(--component-padding) +
-          var(--component-padding)
-      )
-    );
-  }
-}
