@@ -27,6 +27,35 @@ describe("BackgroundTips", () => {
         advanceClock(backgroundTipsView.startDelay + 1);
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
       });
+
+      it("waits for startup state restoration before choosing its pane", async () => {
+        const backgroundTipsView = await activatePackage();
+        const center = lumine.workspace.getCenter();
+        const initialPane = center.getActivePane();
+
+        center.deserialize(center.serialize(), lumine.deserializers);
+
+        expect(center.getActivePane()).not.toBe(initialPane);
+        expect(backgroundTipsView.element.parentNode).toBeFalsy();
+
+        advanceClock(backgroundTipsView.startDelay + 1);
+        expect(backgroundTipsView.element.parentNode).toBe(center.getActivePane().getElement());
+        expect(backgroundTipsView.element.isConnected).toBe(true);
+      });
+
+      it("moves an already attached view to a restored pane", async () => {
+        const backgroundTipsView = await activatePackage();
+        const center = lumine.workspace.getCenter();
+        advanceClock(backgroundTipsView.startDelay + 1);
+        const initialPane = center.getActivePane();
+        expect(backgroundTipsView.element.parentNode).toBe(initialPane.getElement());
+
+        center.deserialize(center.serialize(), lumine.deserializers);
+
+        expect(center.getActivePane()).not.toBe(initialPane);
+        expect(backgroundTipsView.element.parentNode).toBe(center.getActivePane().getElement());
+        expect(backgroundTipsView.element.isConnected).toBe(true);
+      });
     });
 
     describe("when the pane is not empty", () => {
