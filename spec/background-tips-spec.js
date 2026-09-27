@@ -298,6 +298,10 @@ describe("BackgroundTips", () => {
       expect(render("A plain tip.")).toBe("A plain tip.");
     });
 
+    it("exposes the contributing package name", () => {
+      expect(render("A tip from {{ packageName }}.")).toBe("A tip from spec-tips.");
+    });
+
     it("renders the keystroke the command is bound to", () => {
       expect(render("Do it with {{ 'spec-tips:bound' | keystroke }}")).toBe(
         `Do it with ${boundKeystroke()}`,

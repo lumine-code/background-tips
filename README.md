@@ -58,6 +58,12 @@ The `keystroke` filter takes an optional selector for a command bound in more th
 
 Without one, the binding whose selector names the current platform wins, and otherwise the first one declared.
 
+`packageName` holds the exact package name from the provider contribution:
+
+```
+{{ packageName }} provides this tip.
+```
+
 `platform` holds the current `process.platform`, for a tip that only applies to one operating system:
 
 ```
