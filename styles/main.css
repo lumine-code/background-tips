@@ -16,7 +16,7 @@ background-tips {
     color: var(--text-color-faded);
 
     .message {
-      padding: 0 calc(var(--component-padding) * 10);
+      padding: 0 calc(var(--ui-spacing) * 10);
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
       &.fade-in {
@@ -29,7 +29,7 @@ background-tips {
         line-height: 1;
         border: 2px solid;
         padding: 0.1em 0.4em;
-        border-radius: calc(var(--component-border-radius) * 3);
+        border-radius: calc(var(--ui-border-radius) * 3);
         font-family: "Helvetica Neue", Arial, sans-serif;
       }
     }
