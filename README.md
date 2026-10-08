@@ -2,6 +2,8 @@
 
 Displays tips about Lumine in the background when no editors are open.
 
+Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/background-tips`).
+
 ## Features
 
 - **Idle tips**: shows helpful tips whenever the workspace has no open editors.
