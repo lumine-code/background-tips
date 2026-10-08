@@ -50,14 +50,14 @@
   },
   "dependencies": {
     "@lumine-code/underscore-plus": "github:lumine-code/underscore-plus#91b7e3c91435ee2aa57819d5dd5ce215264224dc",
-    "liquidjs": "^10.29.0"
+    "liquidjs": "^10.30.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.11.0",
+    "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-n": "^18.4.0",
-    "globals": "^17.12.0",
+    "eslint-plugin-n": "^18.4.1",
+    "globals": "^17.13.0",
     "prettier": "^3.9.9"
   }
 }
