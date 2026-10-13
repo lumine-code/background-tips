@@ -69,13 +69,15 @@ describe("BackgroundTips", () => {
     });
 
     describe("when a second pane is created", () => {
-      it("detaches the view", async () => {
+      it("keeps the view in the active empty pane", async () => {
         const backgroundTipsView = await activatePackage();
         advanceClock(backgroundTipsView.startDelay + 1);
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
         lumine.workspace.getActivePane().splitRight();
-        expect(backgroundTipsView.element.parentNode).toBeFalsy();
+        expect(backgroundTipsView.element.parentNode).toBe(
+          lumine.workspace.getMainWindow().getEditorContainer().getActivePane().getElement(),
+        );
       });
     });
   });
@@ -86,10 +88,10 @@ describe("BackgroundTips", () => {
       expect(lumine.workspace.getCenter().getPanes().length).toBe(2);
     });
 
-    it("does not attach the view", async () => {
+    it("attaches the view while all main panes are empty", async () => {
       const backgroundTipsView = await activatePackage();
       advanceClock(backgroundTipsView.startDelay + 1);
-      expect(backgroundTipsView.element.parentNode).toBeFalsy();
+      expect(backgroundTipsView.element.parentNode).toBeTruthy();
     });
 
     describe("when all but the last pane is destroyed", () => {
@@ -100,11 +102,55 @@ describe("BackgroundTips", () => {
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
         lumine.workspace.getActivePane().splitRight();
-        expect(backgroundTipsView.element.parentNode).toBeFalsy();
+        expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
         lumine.workspace.getActivePane().destroy();
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
       });
+    });
+  });
+
+  describe("with additional presentation windows", () => {
+    afterEach(async () => {
+      await lumine.workspace.discardEditorWindows();
+    });
+
+    it("keeps tips in the empty main window while a detached pane contains items and has focus", async () => {
+      const backgroundTipsView = await activatePackage();
+      const editor = await lumine.workspace.open();
+      const extra = await lumine.workspace.detachPane(lumine.workspace.paneForItem(editor));
+      advanceClock(backgroundTipsView.startDelay + 1);
+      const main = lumine.workspace.getMainWindow().getEditorContainer();
+      expect(main.getPaneItems()).toEqual([]);
+      expect(lumine.workspace.getCenter().getPaneItems()).toContain(editor);
+      expect(backgroundTipsView.element.parentNode).toBe(main.getActivePane().getElement());
+      expect(extra.getElement().querySelector("background-tips")).toBeNull();
+
+      await lumine.workspace.attachWindow(extra);
+      expect(backgroundTipsView.element.parentNode).toBeNull();
+      const pane = lumine.workspace.paneForItem(editor);
+      await pane.destroyItem(editor);
+      expect(backgroundTipsView.element.parentNode).toBe(main.getActivePane().getElement());
+    });
+
+    it("does not show tips over an empty active main pane while another main pane has an item", async () => {
+      lumine.config.set("core.destroyEmptyPanes", false);
+      const editor = await lumine.workspace.open();
+      const populated = lumine.workspace.paneForItem(editor);
+      const main = lumine.workspace.getMainWindow().getEditorContainer();
+      const empty = main.getActivePane().splitRight();
+      empty.activate();
+      expect(main.getActivePaneItem()).toBeUndefined();
+      const backgroundTipsView = await activatePackage();
+      advanceClock(backgroundTipsView.startDelay + 1);
+      expect(backgroundTipsView.element.parentNode).toBeNull();
+
+      await lumine.workspace.paneForItem(editor).destroyItem(editor);
+      expect(backgroundTipsView.element.parentNode).toBe(main.getActivePane().getElement());
+      const hiddenItem = lumine.workspace.buildTextEditor();
+      expect(populated).not.toBe(main.getActivePane());
+      populated.addItem(hiddenItem);
+      expect(backgroundTipsView.element.parentNode).toBeNull();
     });
   });
 

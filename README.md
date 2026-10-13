@@ -6,7 +6,7 @@ Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/b
 
 ## Features
 
-- **Idle tips**: shows helpful tips whenever the workspace has no open editors.
+- **Idle tips**: shows helpful tips when the main window has no pane items, even if detached windows contain open editors.
 - **Liquid templates**: every tip is a Liquid template, so it can branch on what the keymap actually binds.
 - **Live keystrokes**: a keystroke is resolved when the tip is shown, so it follows the platform and any keymap the user has changed.
 - **Package contributions**: collects tips from every active `background-tips.provider` service.
