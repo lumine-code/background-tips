@@ -12,6 +12,8 @@ Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/b
 - **Package contributions**: collects tips from every active `background-tips.provider` service.
 - **Ignored packages**: lets you suppress tips from selected package names.
 
+![Discover package shortcuts in the empty workspace.](.github/demo.png)
+
 ## Installation
 
 To install `background-tips` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/background-tips`.

@@ -1,0 +1,16 @@
+{
+  "title": "background-tips",
+  "description": "Discover package shortcuts in the empty workspace.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "96e627b04809b2f8cf4d7e349c13ec9daa8f3d59",
+  "mode": "normal",
+  "fontSettings": "default",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "Discover package shortcuts in the empty workspace.",
+      "width": 1200,
+      "height": 760
+    }
+  ]
+}
