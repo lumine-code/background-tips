@@ -69,15 +69,24 @@ describe("BackgroundTips", () => {
     });
 
     describe("when a second pane is created", () => {
-      it("keeps the view in the active empty pane", async () => {
+      it("removes the view and stops rotating tips", async () => {
         const backgroundTipsView = await activatePackage();
         advanceClock(backgroundTipsView.startDelay + 1);
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
         lumine.workspace.getActivePane().splitRight();
-        expect(backgroundTipsView.element.parentNode).toBe(
-          lumine.workspace.getMainWindow().getEditorContainer().getActivePane().getElement(),
-        );
+        expect(backgroundTipsView.element.parentNode).toBeNull();
+        expect(backgroundTipsView.interval).toBeNull();
+        advanceClock(backgroundTipsView.displayDuration + backgroundTipsView.fadeDuration);
+        expect(backgroundTipsView.element.parentNode).toBeNull();
+      });
+
+      it("does not attach the view when the pane is split during the startup delay", async () => {
+        const backgroundTipsView = await activatePackage();
+        lumine.workspace.getActivePane().splitRight();
+
+        advanceClock(backgroundTipsView.startDelay + 1);
+        expect(backgroundTipsView.element.parentNode).toBeNull();
       });
     });
   });
@@ -88,10 +97,15 @@ describe("BackgroundTips", () => {
       expect(lumine.workspace.getCenter().getPanes().length).toBe(2);
     });
 
-    it("attaches the view while all main panes are empty", async () => {
+    it("does not attach the view even when all main panes are empty", async () => {
       const backgroundTipsView = await activatePackage();
       advanceClock(backgroundTipsView.startDelay + 1);
-      expect(backgroundTipsView.element.parentNode).toBeTruthy();
+      expect(backgroundTipsView.element.parentNode).toBeNull();
+
+      for (const pane of lumine.workspace.getMainWindow().getEditorContainer().getPanes()) {
+        pane.activate();
+        expect(backgroundTipsView.element.parentNode).toBeNull();
+      }
     });
 
     describe("when all but the last pane is destroyed", () => {
@@ -102,10 +116,14 @@ describe("BackgroundTips", () => {
         expect(backgroundTipsView.element.parentNode).toBeTruthy();
 
         lumine.workspace.getActivePane().splitRight();
-        expect(backgroundTipsView.element.parentNode).toBeTruthy();
+        expect(backgroundTipsView.element.parentNode).toBeNull();
 
         lumine.workspace.getActivePane().destroy();
-        expect(backgroundTipsView.element.parentNode).toBeTruthy();
+        expect(backgroundTipsView.element.parentNode).toBe(
+          lumine.workspace.getMainWindow().getEditorContainer().getActivePane().getElement(),
+        );
+        advanceClock(backgroundTipsView.fadeDuration);
+        expect(backgroundTipsView.message.textContent).toBeTruthy();
       });
     });
   });
@@ -146,11 +164,16 @@ describe("BackgroundTips", () => {
       expect(backgroundTipsView.element.parentNode).toBeNull();
 
       await lumine.workspace.paneForItem(editor).destroyItem(editor);
-      expect(backgroundTipsView.element.parentNode).toBe(main.getActivePane().getElement());
+      expect(backgroundTipsView.element.parentNode).toBeNull();
       const hiddenItem = lumine.workspace.buildTextEditor();
       expect(populated).not.toBe(main.getActivePane());
       populated.addItem(hiddenItem);
       expect(backgroundTipsView.element.parentNode).toBeNull();
+
+      await populated.destroyItem(hiddenItem);
+      expect(backgroundTipsView.element.parentNode).toBeNull();
+      await populated.destroy();
+      expect(backgroundTipsView.element.parentNode).toBe(main.getActivePane().getElement());
     });
   });
 
