@@ -1,9 +1,9 @@
 {
   "title": "background-tips",
   "description": "Discover package shortcuts in the empty workspace.",
-  "recordedOn": "2026-10-14",
-  "sourceRevision": "df12b3281808bc630d6c29b8f62ca70cd7c82736",
-  "themeSourceRevision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+  "recordedOn": "2026-10-17",
+  "sourceRevision": "0f198d51693b59837d8922eb3f4d5ef6bca1fabb",
+  "themeSourceRevision": "9741489b3a56f23bbfff3307ae993fa3e898fecc",
   "mode": "normal",
   "fontSettings": "default",
   "scenario": "demo.js",
@@ -11,8 +11,8 @@
   "environment": {
     "platform": "win32",
     "arch": "x64",
-    "electron": "44.7.0",
-    "chrome": "152.0.7977.130",
+    "electron": "44.8.0",
+    "chrome": "152.0.7977.167",
     "devicePixelRatio": 1,
     "locale": "en-GB",
     "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
@@ -21,39 +21,40 @@
   },
   "viewport": { "width": 1200, "height": 760 },
   "cornerRadius": 10,
+  "privacy": { "version": 1, "location": "neutral", "textChecked": true },
   "sources": {
     "editor": {
-      "revision": "8be8f86075ad93df038610d82b3ac6d99329957d",
+      "revision": "ee8b5c3fa573f3622d2d96aae88f65428683c109",
       "dirty": true,
-      "workingTreeHash": "0a9458f6e3959fe7a52b2fec76abef27dcbaa9792f192b81ac1e3f6b2be82009"
+      "workingTreeHash": "25eca1293ab0e7f7d09ac07c95dee379f89b948dd175096d09cd5b7fa99cc049"
     },
     "package": {
-      "revision": "df12b3281808bc630d6c29b8f62ca70cd7c82736",
-      "dirty": false,
-      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      "revision": "0f198d51693b59837d8922eb3f4d5ef6bca1fabb",
+      "dirty": true,
+      "workingTreeHash": "bfedba8a9459d3508a5001a1d0e5edcbb31efd523b01f5c789270c24b77686ee"
     },
     "background-tips": {
-      "revision": "df12b3281808bc630d6c29b8f62ca70cd7c82736",
+      "revision": "0f198d51693b59837d8922eb3f4d5ef6bca1fabb",
+      "dirty": true,
+      "workingTreeHash": "bfedba8a9459d3508a5001a1d0e5edcbb31efd523b01f5c789270c24b77686ee"
+    },
+    "bookmarks": {
+      "revision": "2b789b448623a1f620e9cd012574a79271e46b60",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
-    "bookmarks": {
-      "revision": "1e684b8226e6cd5604a0dbe83d7d5f65f5dccb32",
-      "dirty": true,
-      "workingTreeHash": "bc98efcf78db1be5579aabc8927b6b3a9d70db707de5eea03fc57958f74db852"
-    },
     "language-javascript": {
-      "revision": "ae2e6968e3a349fb4d09ce53e339a0f8cce903aa",
+      "revision": "5d5b0f3cba44881fba4d6fe1efa02ab3903089b6",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "one-theme": {
-      "revision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+      "revision": "9741489b3a56f23bbfff3307ae993fa3e898fecc",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "tree-view": {
-      "revision": "fe6f35de06f036837aa9c2d3b138b3d72557bcc4",
+      "revision": "7c851e4b9f247d8bccb8bd077c04721de32cd944",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     }
@@ -86,7 +87,7 @@
       "label": "Discover package shortcuts in the empty workspace.",
       "width": 1200,
       "height": 760,
-      "sha256": "7377bc3f81488b7628ef50b7da8293cd8709e42b54ddad3725ad7941ad318bf5"
+      "sha256": "69cb09e7205a4ec3f87044e039c18e5683a2855dd0d8e6f67c343ddd562882f5"
     }
   ]
 }

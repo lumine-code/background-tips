@@ -208,6 +208,103 @@ describe("BackgroundTips", () => {
       advanceClock(backgroundTipsView.fadeDuration);
       expect(backgroundTipsView.message.textContent).not.toEqual(oldText);
     });
+
+    describe("with a wrapped tip", () => {
+      let paneElement, originalPaneStyle, tipDisposables;
+
+      const showTip = (source) => {
+        tipDisposables.push(
+          backgroundTipsView.addTips({ packageName: "layout-tips", tips: [source] }),
+        );
+        const tip = backgroundTipsView.tips.find((candidate) => candidate.source === source);
+        backgroundTipsView.index = backgroundTipsView.tips.indexOf(tip) - 1;
+        backgroundTipsView.showNextTip();
+        advanceClock(backgroundTipsView.fadeDuration);
+      };
+
+      const expectClearLogoGap = () => {
+        const itemViews = paneElement.querySelector(".item-views");
+        const logoStyle = getComputedStyle(itemViews, "::after");
+        const transform = new DOMMatrixReadOnly(logoStyle.transform);
+        const logoBottom =
+          itemViews.getBoundingClientRect().top +
+          parseFloat(logoStyle.top) +
+          transform.m42 +
+          parseFloat(logoStyle.height);
+        const messageTop = backgroundTipsView.message.getBoundingClientRect().top;
+
+        expect(logoStyle.content).toBe('""');
+        expect(messageTop - logoBottom).toBeCloseTo(24, 1);
+      };
+
+      beforeEach(() => {
+        paneElement = backgroundTipsView.element.parentNode;
+        originalPaneStyle = paneElement.style.cssText;
+        tipDisposables = [];
+        paneElement.style.width = "552px";
+        paneElement.style.height = "500px";
+        paneElement.style.flex = "none";
+        paneElement.style.setProperty("--ui-spacing", "8px");
+        const messageList = backgroundTipsView.element.querySelector(".background-message");
+        messageList.style.fontSize = "24px";
+        messageList.style.lineHeight = "1.5";
+        const styles = document.createElement("style");
+        styles.textContent =
+          "lumine-pane > .item-views:empty::after { transition: none !important; }";
+        jasmine.attachToDOM(styles);
+      });
+
+      afterEach(() => {
+        backgroundTipsView.stop();
+        for (const disposable of tipDisposables) disposable.dispose();
+        paneElement.style.cssText = originalPaneStyle;
+        paneElement.style.removeProperty("--empty-pane-message-height");
+      });
+
+      it("keeps a long tip below the logo in a narrow pane", () => {
+        showTip(
+          "With ide-r, the languageserver R package provides completions, documentation and project navigation without starting a notebook kernel.",
+        );
+
+        expect(backgroundTipsView.message.getBoundingClientRect().height).toBeGreaterThan(72);
+        expectClearLogoGap();
+      });
+
+      it("keeps the gap when resizing makes the current tip wrap onto more lines", async () => {
+        paneElement.style.width = "700px";
+        paneElement.style.height = "650px";
+        showTip(
+          "The IDE SOFiSTiK: Read Calculation Diagnostics command imports an existing calculation log for a saved, unchanged CADINP file. Editing the file clears those imported findings.",
+        );
+        const initialHeight = backgroundTipsView.message.getBoundingClientRect().height;
+        expectClearLogoGap();
+
+        paneElement.style.width = "420px";
+        const wrappedHeight = backgroundTipsView.message.getBoundingClientRect().height;
+        expect(wrappedHeight).toBeGreaterThan(initialHeight);
+        await waitForFrames(
+          () =>
+            parseFloat(paneElement.style.getPropertyValue("--empty-pane-message-height")) ===
+            wrappedHeight,
+          { description: "the resized tip height to reach the logo layout" },
+        );
+
+        expectClearLogoGap();
+      });
+
+      it("disconnects message measurements and clears their pane state when tips stop", () => {
+        const observer = backgroundTipsView.messageResizeObserver;
+        spyOn(observer, "disconnect").and.callThrough();
+        expect(paneElement.style.getPropertyValue("--empty-pane-message-height")).not.toBe("");
+
+        backgroundTipsView.stop();
+
+        expect(observer.disconnect).toHaveBeenCalled();
+        expect(backgroundTipsView.messageResizeObserver).toBeNull();
+        expect(paneElement.style.getPropertyValue("--empty-pane-message-height")).toBe("");
+        expect(backgroundTipsView.element.parentNode).toBeNull();
+      });
+    });
   });
 
   describe("provider service", () => {
