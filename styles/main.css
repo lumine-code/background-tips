@@ -49,3 +49,10 @@ lumine-pane.empty-pane-logo-visible:not(lumine-dock lumine-pane) > background-ti
     transform: translateY(var(--empty-pane-content-offset));
   }
 }
+
+/* Respect reduced motion while retaining visible status indicators. */
+@media (prefers-reduced-motion: reduce) {
+  background-tips .background-message .message {
+    transition: none;
+  }
+}
