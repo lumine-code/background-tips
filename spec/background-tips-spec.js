@@ -222,19 +222,28 @@ describe("BackgroundTips", () => {
         advanceClock(backgroundTipsView.fadeDuration);
       };
 
-      const expectClearLogoGap = () => {
+      const positions = () => {
         const itemViews = paneElement.querySelector(".item-views");
         const logoStyle = getComputedStyle(itemViews, "::after");
         const transform = new DOMMatrixReadOnly(logoStyle.transform);
-        const logoBottom =
-          itemViews.getBoundingClientRect().top +
-          parseFloat(logoStyle.top) +
-          transform.m42 +
-          parseFloat(logoStyle.height);
-        const messageTop = backgroundTipsView.message.getBoundingClientRect().top;
+        const logoTop =
+          itemViews.getBoundingClientRect().top + parseFloat(logoStyle.top) + transform.m42;
+        const message = backgroundTipsView.message.getBoundingClientRect();
 
         expect(logoStyle.content).toBe('""');
-        expect(messageTop - logoBottom).toBeCloseTo(24, 1);
+        return {
+          logoTop,
+          logoBottom: logoTop + parseFloat(logoStyle.height),
+          messageTop: message.top,
+          messageHeight: message.height,
+        };
+      };
+
+      const expectStablePositions = (initial, current) => {
+        expect(current.logoTop).toBeCloseTo(initial.logoTop, 1);
+        expect(current.logoBottom).toBeCloseTo(initial.logoBottom, 1);
+        expect(current.messageTop).toBeCloseTo(initial.messageTop, 1);
+        expect(current.messageTop).toBeGreaterThan(current.logoBottom);
       };
 
       beforeEach(() => {
@@ -258,51 +267,37 @@ describe("BackgroundTips", () => {
         backgroundTipsView.stop();
         for (const disposable of tipDisposables) disposable.dispose();
         paneElement.style.cssText = originalPaneStyle;
-        paneElement.style.removeProperty("--empty-pane-message-height");
       });
 
-      it("keeps a long tip below the logo in a narrow pane", () => {
-        showTip(
+      it("keeps the logo and first line in place as short tips change to long tips", () => {
+        showTip("A short tip.");
+        const initial = positions();
+        expect(initial.messageTop).toBeGreaterThan(initial.logoBottom);
+
+        for (const source of [
           "With ide-r, the languageserver R package provides completions, documentation and project navigation without starting a notebook kernel.",
-        );
-
-        expect(backgroundTipsView.message.getBoundingClientRect().height).toBeGreaterThan(72);
-        expectClearLogoGap();
+          "The IDE SOFiSTiK: Read Calculation Diagnostics command imports an existing calculation log for a saved, unchanged CADINP file. Editing the file clears those imported findings.",
+        ]) {
+          showTip(source);
+          const current = positions();
+          expect(current.messageHeight).toBeGreaterThan(initial.messageHeight * 2);
+          expectStablePositions(initial, current);
+        }
       });
 
-      it("keeps the gap when resizing makes the current tip wrap onto more lines", async () => {
+      it("keeps the logo and first line in place when a narrower pane adds wrapped lines", () => {
         paneElement.style.width = "700px";
         paneElement.style.height = "650px";
         showTip(
           "The IDE SOFiSTiK: Read Calculation Diagnostics command imports an existing calculation log for a saved, unchanged CADINP file. Editing the file clears those imported findings.",
         );
-        const initialHeight = backgroundTipsView.message.getBoundingClientRect().height;
-        expectClearLogoGap();
+        const initial = positions();
+        expect(initial.messageTop).toBeGreaterThan(initial.logoBottom);
 
         paneElement.style.width = "420px";
-        const wrappedHeight = backgroundTipsView.message.getBoundingClientRect().height;
-        expect(wrappedHeight).toBeGreaterThan(initialHeight);
-        await waitForFrames(
-          () =>
-            parseFloat(paneElement.style.getPropertyValue("--empty-pane-message-height")) ===
-            wrappedHeight,
-          { description: "the resized tip height to reach the logo layout" },
-        );
-
-        expectClearLogoGap();
-      });
-
-      it("disconnects message measurements and clears their pane state when tips stop", () => {
-        const observer = backgroundTipsView.messageResizeObserver;
-        spyOn(observer, "disconnect").and.callThrough();
-        expect(paneElement.style.getPropertyValue("--empty-pane-message-height")).not.toBe("");
-
-        backgroundTipsView.stop();
-
-        expect(observer.disconnect).toHaveBeenCalled();
-        expect(backgroundTipsView.messageResizeObserver).toBeNull();
-        expect(paneElement.style.getPropertyValue("--empty-pane-message-height")).toBe("");
-        expect(backgroundTipsView.element.parentNode).toBeNull();
+        const current = positions();
+        expect(current.messageHeight).toBeGreaterThan(initial.messageHeight);
+        expectStablePositions(initial, current);
       });
     });
   });

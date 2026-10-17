@@ -36,10 +36,16 @@ background-tips {
   }
 }
 
-/* Move the workspace tip with the logo's shared composition anchor. Other
-   background-tip elements live inside pane items and do not match this scope. */
+/* Keep the first line at the logo's shared anchor, letting extra lines grow
+   downwards. Full height keeps percentage offsets relative to the whole pane.
+   Background-tip elements inside pane items do not match this scope. */
 lumine-pane.empty-pane-logo-visible:not(lumine-dock lumine-pane) > background-tips {
   .background-message.centered {
+    top: 50%;
+    bottom: auto;
+    height: 100%;
+    align-items: flex-start;
+    margin-top: -0.5lh;
     transform: translateY(var(--empty-pane-content-offset));
   }
 }

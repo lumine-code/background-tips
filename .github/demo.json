@@ -2,7 +2,7 @@
   "title": "background-tips",
   "description": "Discover package shortcuts in the empty workspace.",
   "recordedOn": "2026-10-17",
-  "sourceRevision": "0f198d51693b59837d8922eb3f4d5ef6bca1fabb",
+  "sourceRevision": "1ddae0c2379a626206e2758e1dc2bb3991fa2e13",
   "themeSourceRevision": "9741489b3a56f23bbfff3307ae993fa3e898fecc",
   "mode": "normal",
   "fontSettings": "default",
@@ -24,19 +24,19 @@
   "privacy": { "version": 1, "location": "neutral", "textChecked": true },
   "sources": {
     "editor": {
-      "revision": "ee8b5c3fa573f3622d2d96aae88f65428683c109",
+      "revision": "18b7b6b8cf710baca7a32bf7db7ea93a44dab052",
       "dirty": true,
-      "workingTreeHash": "25eca1293ab0e7f7d09ac07c95dee379f89b948dd175096d09cd5b7fa99cc049"
+      "workingTreeHash": "2fe76d3736436f8c6cf51baeefc6f1f0e0ed72e79eac632c1c8cc6c34a729a45"
     },
     "package": {
-      "revision": "0f198d51693b59837d8922eb3f4d5ef6bca1fabb",
+      "revision": "1ddae0c2379a626206e2758e1dc2bb3991fa2e13",
       "dirty": true,
-      "workingTreeHash": "bfedba8a9459d3508a5001a1d0e5edcbb31efd523b01f5c789270c24b77686ee"
+      "workingTreeHash": "d187eb339e2ffd87167d3e09b3aac8d26438550d4eba1c728d2d6200fbac5bb0"
     },
     "background-tips": {
-      "revision": "0f198d51693b59837d8922eb3f4d5ef6bca1fabb",
+      "revision": "1ddae0c2379a626206e2758e1dc2bb3991fa2e13",
       "dirty": true,
-      "workingTreeHash": "bfedba8a9459d3508a5001a1d0e5edcbb31efd523b01f5c789270c24b77686ee"
+      "workingTreeHash": "d187eb339e2ffd87167d3e09b3aac8d26438550d4eba1c728d2d6200fbac5bb0"
     },
     "bookmarks": {
       "revision": "2b789b448623a1f620e9cd012574a79271e46b60",
@@ -87,7 +87,7 @@
       "label": "Discover package shortcuts in the empty workspace.",
       "width": 1200,
       "height": 760,
-      "sha256": "69cb09e7205a4ec3f87044e039c18e5683a2855dd0d8e6f67c343ddd562882f5"
+      "sha256": "5ec7ad1b770e4731dcbd0dc8efb405d8b86600b5f97f970c014f862b39f156c7"
     }
   ]
 }
