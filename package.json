@@ -32,6 +32,13 @@
     "format:check": "prettier --check ."
   },
   "configSchema": {
+    "displayDuration": {
+      "title": "Display Duration",
+      "description": "How long each background tip is shown, in seconds.",
+      "type": "integer",
+      "minimum": 1,
+      "default": 10
+    },
     "ignoredPackages": {
       "title": "Ignored Packages",
       "description": "Package names whose background tips are not shown.",
