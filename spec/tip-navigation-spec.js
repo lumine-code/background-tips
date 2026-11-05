@@ -148,6 +148,7 @@ describe("Background tip navigation", () => {
     advanceClock(view.displayDuration + view.fadeDuration);
     expect(rotate).not.toHaveBeenCalled();
 
+    view.index = view.tips.findIndex((tip) => tip.packageName === "background-tips");
     lumine.config.set("background-tips.ignoredPackages", ["background-tips"]);
     expect(view.element.parentNode).toBeTruthy();
     expect(view.interval).not.toBeNull();
