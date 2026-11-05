@@ -1,0 +1,6 @@
+{
+  "lumine-pane:has(> background-tips)": {
+    "right": "background-tips:next-tip",
+    "left": "background-tips:previous-tip"
+  }
+}

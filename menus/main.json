@@ -1,0 +1,22 @@
+{
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "Background Tips",
+          "submenu": [
+            {
+              "label": "Next Tip",
+              "command": "background-tips:next-tip"
+            },
+            {
+              "label": "Previous Tip",
+              "command": "background-tips:previous-tip"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,9 @@
   "license": "MIT",
   "main": "./lib/background-tips",
   "files": [
+    "keymaps",
     "lib",
+    "menus",
     "spec",
     "styles",
     "THIRD_PARTY_NOTICES"

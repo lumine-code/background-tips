@@ -7,6 +7,7 @@ Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/b
 ## Features
 
 - **Idle tips**: shows helpful tips when the main window has exactly one empty pane, even if detached windows contain open editors.
+- **Tip navigation**: browse previous and next tips, with a fresh display duration after each manual change.
 - **Liquid templates**: every tip is a Liquid template, so it can branch on what the keymap actually binds.
 - **Live keystrokes**: a keystroke is resolved when the tip is shown, so it follows the platform and any keymap the user has changed.
 - **Package contributions**: collects tips from every active `background-tips.provider` service.
@@ -17,6 +18,13 @@ Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/b
 ## Installation
 
 To install `background-tips` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/background-tips`.
+
+## Commands
+
+Commands available in `lumine-pane:has(> background-tips)`:
+
+- `background-tips:next-tip`: show the next available tip,
+- `background-tips:previous-tip`: show the previous available tip.
 
 ## Usage
 
